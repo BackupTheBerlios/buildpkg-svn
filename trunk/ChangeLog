@@ -1,8 +1,0 @@
-0.1:	Initial release
-
-0.1a:	Added recursive copying for doc files in buildpkg
-	Added check if man page directory exists before gzip'ing
-
-0.1b:	The script used to chmod /usr/doc/$pkgname-$pkgver to 644, which
-	could create problems when directories are in there.
-	Added auto-regeration of /usr/src/packages
