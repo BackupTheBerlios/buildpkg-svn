@@ -1,0 +1,167 @@
+#!/bin/bash
+# Buildpkg, utility to build Jantin (and other slackware-compatible distros) packages
+
+# We start here
+startdir=`pwd`
+
+# Let's be sure EVERYTHING we need is there
+if [ ! -x /sbin/makepkg ]; then
+	echo "makepkg has to be there, and set executable for buildpkg to work"
+	echo "Please correct this or contact your admin"
+	exit
+fi
+
+# Let's include our BUILD file
+if [ -e $startdir/BUILD ]; then
+	source $startdir/BUILD
+else
+	echo "The required BUILD file is missing from $startdir."
+	exit
+fi
+
+# slack-desc is also required
+if [ ! -e $startdir/slack-desc ]; then
+	echo "The required file slack-desc is missing from $startdir."
+	exit
+fi
+
+# Checking for dependencies
+if [ ! -e $startdir/slack-required ]; then
+	echo "slack-required file missing... no dependency information will be included"
+else
+	echo "Computing dependencies"
+	
+fi
+
+
+# Initial variables
+#
+# TMP: the build root
+# PKG: target dir for our package (under $TMP)
+# SRCFILE: the actual filenames we downloaded
+# ARCH: architecture (i686, i486, etc)
+
+TMP=/tmp/packages/${pkgname}
+PKG=${TMP}/package-${pkgname}
+rm -rf ${TMP}
+mkdir -p ${PKG}
+ARCH=`uname -m`
+
+index=0
+for file in ${src[@]}; do
+	SRCFILE[${index}]=`basename ${src}`
+	let 'index=index+1'
+done
+
+# Ok, let's move to the buildroot
+cd $TMP
+
+# Give the user a bit of feedback
+echo Building $pkgname version $pkgver
+echo Downloading from $src
+
+# Time to download the files...
+for file in ${src[@]}; do
+	wget --progress=dot ${file}
+done
+
+
+for file in ${SRCFILE[@]}; do
+	SRCTYPE=`file ${file} | awk '{ print $2 }'`
+
+	case ${SRCTYPE} in
+		gzip)
+			ZIPPROG="gzip"
+			;;
+		bzip2)
+			ZIPPROG="bzip2"
+			;;
+		RCS/CVS)
+			# patch
+			ZIPPROG="nada"
+			;;
+		*)
+			echo "Unknown compression format..."
+			exit 1
+	esac
+
+	if [ ${ZIPPROG} != "nada" ]; then
+		tar --use-compress-program=${ZIPPROG} -xvf ${file} || exit
+	fi
+done
+
+# build function (as defined in BUILD file)
+build
+
+# After build stuff
+
+# Doc files. We want to keep Slackware compatibility
+# This came from linuxpackages.net's slackbuilds package
+DOCFILES="ABOUT ABOUT-NLS ANNOUNCE AUTHORS CONFIGURATION CHANGES COPYING COPYRIGHT CREDITS ChangeLog \
+Changelog CHANGELOG CONTRIBUTORS *FAQ* FEATURES FILES HACKING History HISTORY INSTALL* LICENSE LSM \
+MANIFEST NEWS *README* *Readme* SITES *RELEASE* RELNOTES THANKS TIPS TODO VERSION CONFIGURATION* \
+GPL License Doc doc Docs* docs* Roadmap ROADMAP *BUGS* index.ht* *INDEX*"
+
+mkdir -p $PKG/usr/doc/$pkgname-$pkgver
+for i in $DOCFILES; do
+	if [ -e $i ]; then
+		if ! [ -L $i ]; then
+			cp -aR $i $PKG/usr/doc/$pkgname-$pkgver
+		else
+			cp -LRp $i $PKG/usr/doc/$pkgname-$pkgver
+		fi
+	fi
+done
+
+chown -R root.root $PKG/usr/doc/$pkgname-$pkgver/*
+
+cd $PKG
+
+# Man pages must be compressed...
+if [ -d $PKG/usr/man ]; then
+	find . | xargs file | grep troff | awk -F ":" '{ print $1 }' | xargs gzip
+fi
+
+# Binary files should be owned by root:root
+for i in bin usr/bin sbin usr/sbin; do
+	if [ -e $PKG/$i ]; then
+		chown -R root:root $i
+	fi
+done
+
+# We need to strip the binary files too
+find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null
+find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null
+    
+
+# Install files. Those include slack-desc, slack-required, slack-suggests, slack-conflicts and doinst.sh
+mkdir -p ${PKG}/install
+
+for i in slack-desc slack-required slack-suggests slack-conflicts doinst.sh; do
+	if [ -e $startdir/${i} ]; then
+		cat $startdir/${i} > ${PKG}/install/${i}
+	fi
+done
+
+# Done, now, let's create the package.
+# /tmp might be a little full, so we'll put the finished package in /usr/src/packages
+if [ ! -d /usr/src/packages ]; then
+	mkdir -p /usr/src/packages
+fi
+
+cd $PKG
+makepkg -l y -c n /usr/src/packages/$pkgname-$pkgver-$ARCH-$build.tgz
+
+# Finished product and little warning about /tmp
+echo "Your package is ready in /usr/src/packages"
+echo "The buildroot $TMP still exists. You might want to delete it"
+if [ -x /usr/bin/genpkg ]; then
+	echo "Updating slapt-get repository"
+	cd /usr/src/packages
+	genpkg all
+else
+	echo "genpkg not found or not executable..."
+	echo "If you use slapt-get, don't forget to run 'genpkg all' in /usr/src/packages manually"
+fi
+
+cd $startdir
