@@ -1,0 +1,76 @@
+buildpkg: a simple package building system for Slackware (-like) distributions
+==============================================================================
+
+Buildpkg is a simple software/package building system for Slackware
+compatible distributions.
+
+It is very similar to the ArchLinux 'makepkg' command, and works in similar
+ways. But it is developed and adapted for Slackware systems.
+
+Introduction:
+-------------
+
+The buildpkg command is a simple bash script. You start it in the builddir
+of the software you wish to build. A buildir is a directory, usually within
+your home directory, which contains the required files to create packages
+with buildpkg.
+
+These files are BUILD and slack-desc. buildpkg also supports the inclusion
+of doinst.sh, slack-required, slack-suggests and slack-conflicts files.
+
+
+The BUILD file is a simple bash file that will be "sourced" by the buildpkg
+command:
+
+pkgname=buildpkg
+pkgver=0.1a
+src="http://frogde.sf.net/$pkgname-$pkgver.tar.gz"
+build=1dxt
+
+build() {
+	cd $pkgname-$pkgver
+	mkdir -p $PKG/usr/bin
+	install -m755 buildpkg $PKG/usr/bin
+	install -m755 genpkg $PKG/usr/bin
+}
+
+
+
+
+The slack-desc file is the standard slackware format:
+
+
+         |-----handy-ruler------------------------------------------------------|
+program: description
+program: description
+program: description
+program: description
+program: description
+program: description
+program: description
+program: description
+program: description
+program: description
+program: description
+
+
+A great tool and source of information for creating slack-* files can be
+found at http://www.linuxpackages.net/howto.php?page=perfect-package.
+
+
+Also included is genpkg. genpkg is a shell script found on the slapt-get
+home page, and is used to regenerate your local package repository when
+using slapt-get.
+
+Packages built by buildpkg will be moved to /usr/src/packages. In order to
+use this directory as a slapt-get repository, you have to add the line
+
+SOURCE=file///usr/src/packages
+
+to your /etc/slapt-get/slapt-getrc file.
+
+buildpkg will update the repository everytime a package is created. All you
+need to do then is:
+- run slapt-get --update
+- slapt-get --install <package>, where <package> is the name of the package
+  that you just built.
