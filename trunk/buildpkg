@@ -30,9 +30,18 @@ if [ ! -e $startdir/slack-required ]; then
 	echo "slack-required file missing... no dependency information will be included"
 else
 	echo "Computing dependencies"
-	
+	for depLine in `cat $startdir/slack-required | sed s/\ /___/g`; do
+		depName=`echo ${depLine} | awk -F "___" '{ print $1 }'`
+		depComp=`echo ${depLine} | awk -F "___" '{ print $2 }'`
+		depVer=`echo ${depLine} | awk -F "___" '{ print $3 }'`
+		echo "Needed ${depName} ${depComp} ${depVer}"
+	done
 fi
 
+if [ $1 == "--test" ]; then
+	echo "Test Mode on"
+	exit
+fi
 
 # Initial variables
 #
