@@ -1,0 +1,90 @@
+#!/bin/sh
+
+# Slackware build script for buildpkg
+
+# Copyright 2006  Martin Lefebvre <dadexter@gmail.com>
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+# EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+##
+#
+# Requirements:
+#
+# Usage example (as root):
+# # chmod a+x prgnam.SlackBuild
+# # ARCH=i686 sh ./prgnam.SlackBuild
+#
+##
+
+set -e
+
+# Basic variables definitions
+PRGNAM=buildpkg
+VERSION=svn
+ARCH=noarch
+BUILD=1
+TAG=jtn
+CWD=`pwd`
+TMP=${TMP:-/tmp/packages}
+PKG=$TMP/pkg-$PRGNAM
+OUTPUT=$TMP
+
+# Clean up and take off
+rm -rf $PKG
+
+# Arranging source permissions
+chown -R root.root .
+find . -perm 777 -exec chmod 755 {} \;
+find . -perm 775 -exec chmod 755 {} \;
+find . -perm 666 -exec chmod 644 {} \;
+find . -perm 664 -exec chmod 644 {} \;
+
+mkdir -p $PKG/usr/sbin
+/usr/bin/install -m755 buildpkg $PKG/usr/sbin
+
+# gzipping manpages
+if [ -d $PKG/usr/man ]; then
+  gzip -9 $PKG/usr/man/man?/*
+fi
+
+# gzipping info pages
+if [ -d $PKG/usr/info ]; then  
+  $PKG/usr/info/*.info
+
+  # If this is not done, your info page index will be corrupted
+  if [ -e $PKG/usr/info/dir ]; then
+    rm $PKG/usr/info/dir
+  fi
+fi
+
+
+# Packaging time
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a COPYING ChangeLog INSTALL README docs \
+  $PKG/usr/doc/$PRGNAM-$VERSION
+
+find . -name '.svn' -exec rmdir {} \;
+
+mkdir -p $PKG/install
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+
+cd $PKG
+makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.tgz
