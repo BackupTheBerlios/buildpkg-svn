@@ -25,24 +25,6 @@ if [ ! -e $startdir/slack-desc ]; then
 	exit
 fi
 
-# Checking for dependencies
-if [ ! -e $startdir/slack-required ]; then
-	echo "slack-required file missing... no dependency information will be included"
-else
-	echo "Computing dependencies"
-	for depLine in `cat $startdir/slack-required | sed s/\ /___/g`; do
-		depName=`echo ${depLine} | awk -F "___" '{ print $1 }'`
-		depComp=`echo ${depLine} | awk -F "___" '{ print $2 }'`
-		depVer=`echo ${depLine} | awk -F "___" '{ print $3 }'`
-		echo "Needed ${depName} ${depComp} ${depVer}"
-	done
-fi
-
-if [ $1 == "--test" ]; then
-	echo "Test Mode on"
-	exit
-fi
-
 # Initial variables
 #
 # TMP: the build root
@@ -154,10 +136,10 @@ find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs strip
 find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null
     
 
-# Install files. Those include slack-desc, slack-required, slack-suggests, slack-conflicts and doinst.sh
+# Install files. Those include slack-desc and doinst.sh
 mkdir -p ${PKG}/install
 
-for i in slack-desc slack-required slack-suggests slack-conflicts doinst.sh; do
+for i in slack-desc doinst.sh; do
 	if [ -e $startdir/${i} ]; then
 		cat $startdir/${i} > ${PKG}/install/${i}
 	fi
