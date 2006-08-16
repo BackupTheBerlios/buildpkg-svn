@@ -67,10 +67,10 @@ cd $TMP
 
 # Give the user a bit of feedback
 echo Building $pkgname version $pkgver
-echo Downloading from $src
 
 # Time to download the files...
 for file in ${src[@]}; do
+	echo Downloading from ${file}
 	wget --progress=dot ${file}
 done
 
@@ -122,7 +122,7 @@ for i in $DOCFILES; do
 	fi
 done
 
-chown -R root.root $PKG/usr/doc/$pkgname-$pkgver/*
+chown -R root:root $PKG/usr/doc/$pkgname-$pkgver/*
 
 cd $PKG
 
@@ -130,6 +130,17 @@ cd $PKG
 if [ -d $PKG/usr/man ]; then
 	find . | xargs file | grep troff | awk -F ":" '{ print $1 }' | xargs gzip
 fi
+
+# gzipping info pages
+if [ -d $PKG/usr/info ]; then  
+  gzip -9 $PKG/usr/info/*.info
+  
+  # If this is not done, your info page index will be corrupted
+  if [ -e $PKG/usr/info/dir ]; then
+    rm $PKG/usr/info/dir
+  fi
+fi
+            
 
 # Binary files should be owned by root:root
 for i in bin usr/bin sbin usr/sbin; do
@@ -164,13 +175,5 @@ makepkg -l y -c n /usr/src/packages/$pkgname-$pkgver-$ARCH-$build.tgz
 # Finished product and little warning about /tmp
 echo "Your package is ready in /usr/src/packages"
 echo "The buildroot $TMP still exists. You might want to delete it"
-if [ -x /usr/bin/genpkg ]; then
-	echo "Updating slapt-get repository"
-	cd /usr/src/packages
-	genpkg all
-else
-	echo "genpkg not found or not executable..."
-	echo "If you use slapt-get, don't forget to run 'genpkg all' in /usr/src/packages manually"
-fi
 
 cd $startdir
