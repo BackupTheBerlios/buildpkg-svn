@@ -1,0 +1,11 @@
+buildpkg: buildpkg is a simple Slackware-oriented package building system
+buildpkg: developed for Jantin Linux.
+buildpkg: 
+buildpkg: It uses a system similar in many aspects to ArchLinux's makepkg
+buildpkg: utility.
+buildpkg: 
+buildpkg: 
+buildpkg: 
+buildpkg: 
+buildpkg: 
+buildpkg: 
