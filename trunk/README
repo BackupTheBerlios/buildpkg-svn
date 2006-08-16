@@ -24,8 +24,8 @@ command:
 
 pkgname=buildpkg
 pkgver=0.1a
-src="http://frogde.sf.net/$pkgname-$pkgver.tar.gz"
-build=1dxt
+src="http://www.downloadsite.com/$pkgname-$pkgver.tar.gz"
+build=1jtn
 
 build() {
 	cd $pkgname-$pkgver
@@ -56,21 +56,3 @@ program: description
 
 A great tool and source of information for creating slack-* files can be
 found at http://www.linuxpackages.net/howto.php?page=perfect-package.
-
-
-Also included is genpkg. genpkg is a shell script found on the slapt-get
-home page, and is used to regenerate your local package repository when
-using slapt-get.
-
-Packages built by buildpkg will be moved to /usr/src/packages. In order to
-use this directory as a slapt-get repository, you have to add the line
-
-SOURCE=file///usr/src/packages
-
-to your /etc/slapt-get/slapt-getrc file.
-
-buildpkg will update the repository everytime a package is created. All you
-need to do then is:
-- run slapt-get --update
-- slapt-get --install <package>, where <package> is the name of the package
-  that you just built.

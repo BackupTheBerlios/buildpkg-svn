@@ -1,4 +1,3 @@
 The setup itself is clean and easy:
 
-cd docs/sample/buildpkg
-sh ../../../buildpkg
+sh ./buildpkg.SlackBuild
