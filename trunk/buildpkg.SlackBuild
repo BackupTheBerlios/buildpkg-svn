@@ -39,7 +39,7 @@ set -e
 PRGNAM=buildpkg
 VERSION=svn
 ARCH=noarch
-BUILD=1
+BUILD=2
 TAG=jtn
 CWD=`pwd`
 TMP=${TMP:-/tmp/packages}

@@ -81,6 +81,13 @@ for file in ${SRCFILE[@]}; do
 	fi
 done
 
+# CFLAGS
+if [ "$ARCH" = "i486" ]; then
+  SLKCFLAGS="-O2 -march=i486 -mtune=i686"
+elif [ "$ARCH" = "i686" ]; then
+  SLKCFLAGS="-O2 -march=i686 -mtune=i686"
+fi
+
 # build function (as defined in BUILD file)
 build
 
@@ -152,7 +159,7 @@ if [ ! -d /usr/src/packages ]; then
 fi
 
 cd $PKG
-makepkg -l y -c n /usr/src/packages/$pkgname-$pkgver-$ARCH-$build.tgz
+makepkg -l y -c n ${CWD}/$pkgname-$pkgver-$ARCH-$build.tgz
 
 # Finished product and little warning about /tmp
 echo "Your package is ready in /usr/src/packages"
