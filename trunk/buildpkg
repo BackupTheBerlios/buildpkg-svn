@@ -159,7 +159,7 @@ if [ ! -d /usr/src/packages ]; then
 fi
 
 cd $PKG
-makepkg -l y -c n $startdir/$pkgname-$pkgver-$ARCH-$build.tgz
+/sbin/makepkg -l y -c n $startdir/$pkgname-$pkgver-$ARCH-$build.tgz
 
 # Finished product and little warning about /tmp
 echo "Your package is ready in /usr/src/packages"
