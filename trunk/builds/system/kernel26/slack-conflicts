@@ -1,0 +1,6 @@
+kernel-ide
+kernel-generic
+kernel-headers
+kernel-source
+kernel-modules
+alsa-driver

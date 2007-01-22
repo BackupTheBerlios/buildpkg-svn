@@ -1,0 +1,10 @@
+gnustep-back: GNUstep can run on a variaty of systems with a variaty of display engines.
+gnustep-back: To accompany all those systems the GNUstep developers where smart enough to
+gnustep-back: invent a system called a backend. This means that you only have to install
+gnustep-back: the backend that you need for your displaying engine, which keeps things
+gnustep-back: lean and mean. And it makes it easier to port a GNUstep system to a new
+gnustep-back: displaying engine.
+gnustep-back: 
+gnustep-back: 
+gnustep-back: 
+gnustep-back: 

@@ -1,0 +1,11 @@
+kernel26: The Linux kernel, version 2.6.16.18
+kernel26:
+kernel26: This package includes the kernelitself, the modules and the
+kernel26: source. It is built from the Slackware .config file, but
+kernel26: replaces the kernel-ide/kernel-generic, kernel-headers,
+kernel26: kernel-modules, kernel-source and alsa-driver packages.
+kernel26:
+kernel26:
+kernel26:
+kernel26:
+kernel26:

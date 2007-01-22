@@ -1,0 +1,11 @@
+gnustep-gui: It is a library of graphical user interface classes written
+gnustep-gui: completely in the Objective-C language; the classes are based
+gnustep-gui: upon the OpenStep specification as released by NeXT Software,
+gnustep-gui: Inc. The library does not completely conform to the specification
+gnustep-gui: and has been enhanced in a number of ways to take advantage of
+gnustep-gui: the GNU system. These classes include graphical objects such as
+gnustep-gui: buttons, text fields, popup lists, browser lists, and windows;
+gnustep-gui: there are also many associated classes for handling events,
+gnustep-gui: colors, fonts, pasteboards and images.
+gnustep-gui: 
+gnustep-gui: 

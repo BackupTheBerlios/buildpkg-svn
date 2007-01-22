@@ -1,0 +1,11 @@
+pantomime: Pantomime provides a set of Objective-C classes that
+pantomime: model a mail system. Pantomime can be seen as a JavaMail
+pantomime: 1.2 clone written in Objective-C.Pantomime is almost
+pantomime: entirely written in Objective-C. The C language is only
+pantomime: used where performance is critical. Pantomime uses a little
+pantomime: bit of ELM code.
+pantomime: 
+pantomime: 
+pantomime: 
+pantomime: 
+pantomime: 

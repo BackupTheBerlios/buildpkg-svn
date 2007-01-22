@@ -1,0 +1,12 @@
+gnustep-examples: Examples from the GNUstep project, including:
+gnustep-examples: 
+gnustep-examples: - lnk: a text editor
+gnustep-examples: - Calculator
+gnustep-examples: - CurrencyConverter
+gnustep-examples: - Finger
+gnustep-examples: - GFractal
+gnustep-examples: - GPuzzle
+gnustep-examples: - HostAddress
+gnustep-examples: - A lot more
+gnustep-examples: 
+

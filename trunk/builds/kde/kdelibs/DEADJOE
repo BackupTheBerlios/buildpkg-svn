@@ -1,0 +1,59 @@
+
+*** Modified files in JOE when it aborted on Sat Jun  3 16:55:55 2006
+*** JOE was aborted because the terminal closed
+
+*** File 'BUILD'
+pkgname=kdelibs
+pkgver=3.5.3
+src="http://mirrors.ibiblio.org/pub/mirrors/kde/stable/3.5.3/src/$pkgname-$pkgver.tar.bz2"
+build=1dxt
+
+build() {
+	cd $pkgname-$pkgver
+
+	./configure --prefix=/opt/kde
+		--localstatedir=/var \
+		--sysconfdir=/etc \
+		--program-suffix="" \
+		--program-prefix=""
+
+	make || exit
+	make DESTDIR=${PKG} install
+}
+
+*** File '(Unnamed)'
+haldaemon
+sysfsutils
+buildpkg
+${_arch}
+fcall
+-gui
+-gui
+terminal
+gnumail
+grr
+
+*** File '(Unnamed)'
+kid3
+kid3
+-make
+-base
+mpc
+mad
+Mad
+kid3
+addresses
+rsskit
+
+*** File '(Unnamed)'
+README
+INSTALL
+slack-required
+BUILD
+slack-
+README
+BUILD
+BUILD
+BUILD
+slack-desc
+BUILD

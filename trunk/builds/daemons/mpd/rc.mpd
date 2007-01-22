@@ -1,0 +1,15 @@
+#!/bin/sh
+# Start/stop/restart the MPD server:
+
+if [ "$1" = "stop" ]; then
+  echo "Stopping MPD..."
+  killall -9 mpd
+elif [ "$1" = "restart" ]; then
+  echo "Restarting gpm..."
+  killall -9 mpd
+  sleep 1
+  /usr/bin/mpd
+else # assume $1 = start:
+  echo "Starting MPD..."
+  /usr/bin/mpd
+fi
