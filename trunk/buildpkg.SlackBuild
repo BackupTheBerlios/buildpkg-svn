@@ -50,11 +50,11 @@ OUTPUT=$TMP
 rm -rf $PKG
 
 # Arranging source permissions
-chown -R root.root .
-find . -perm 777 -exec chmod 755 {} \;
-find . -perm 775 -exec chmod 755 {} \;
-find . -perm 666 -exec chmod 644 {} \;
-find . -perm 664 -exec chmod 644 {} \;
+#chown -R root.root .
+#find . -perm 777 -exec chmod 755 {} \;
+#find . -perm 775 -exec chmod 755 {} \;
+#find . -perm 666 -exec chmod 644 {} \;
+#find . -perm 664 -exec chmod 644 {} \;
 
 mkdir -p $PKG/usr/sbin
 /usr/bin/install -m755 buildpkg $PKG/usr/sbin
@@ -77,8 +77,7 @@ fi
 
 # Packaging time
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a COPYING ChangeLog INSTALL README docs \
-  $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a COPYING ChangeLog INSTALL README $PKG/usr/doc/$PRGNAM-$VERSION
 
 find . -name '.svn' -exec rmdir {} \;
 
@@ -86,5 +85,8 @@ mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
+mkdir -p $PKG/var/builds
+cp -a $CWD/builds/* $PKG/var/builds/
+
 cd $PKG
-makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.tgz
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.tgz
