@@ -124,9 +124,15 @@ chown -R root:root $PKG/usr/doc/$pkgname-$pkgver/*
 
 cd $PKG
 
+# Remove sneaky makefiles from the documentation
+find $PKG/usr/doc -iname 'Makefile*' -exec rm {} \;
+
 # Man pages must be compressed...
 if [ -d $PKG/usr/man ]; then
-	find . | xargs file | grep troff | awk -F ":" '{ print $1 }' | xargs gzip
+	( cd $PKG/usr/man
+	  find . -type f -exec gzip -9 {} \;
+	  for i in `find . -type l`; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
+	)
 fi
 
 # gzipping info pages
