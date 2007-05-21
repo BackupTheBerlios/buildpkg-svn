@@ -4,6 +4,14 @@
 # We start here
 startdir=`pwd`
 
+if [ $1 == "update" ]; then
+	BUILDSDIR="/usr/src"
+	mkdir -p ${BUILDSDIR}
+	cd ${BUILDSDIR}
+	cvs -z3 -d:pserver:anonymous@cvs.buildpkg.berlios.de:/cvsroot/buildpkg co builds
+	exit
+fi
+
 # Let's be sure EVERYTHING we need is there
 if [ ! -x /sbin/makepkg ]; then
 	echo "makepkg has to be there, and set executable for buildpkg to work"
@@ -24,6 +32,7 @@ if [ ! -e $startdir/slack-desc ]; then
 	echo "The required file slack-desc is missing from $startdir."
 	exit
 fi
+
 
 # Initial variables
 #
